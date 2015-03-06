@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<install version="2.5" type="plugin" group="vmpayment" >
+    <name>Payeer</name>
+    <creationDate>Jule 2014</creationDate>
+    <author>Payeer</author>
+    <authorUrl>https://payeer.com</authorUrl>
+    <copyright></copyright>
+    <license></license>
+    <version>3.0.0</version>
+    <description><![CDATA[Payeer - универсальная система приема платежей, поддерживающая массу известных платежных систем и переводов. ]]></description>
+   
+   <files>
+		<filename plugin="payeer">payeer.php</filename>
+		<filename plugin="payeer">success.php</filename>
+		<filename plugin="payeer">fail.php</filename>
+		<filename plugin="payeer">status.php</filename>
+        <folder>language</folder>
+    </files>
+	
+	<vmconfig>
+        <fields name="params">
+            <fieldset name="basic" addfieldpath="/plugins/vmpayment/payeer/payeer/fields">
+				<field name="payment_logos" type="vmfiles" label="VMPAYMENT_STANDARD_LOGOS"
+					description="VMPAYMENT_STANDARD_LOGOS_DESC"
+					directory="/plugins/vmpayment/payeer"
+					default="payeer.png" hide_default="1" hide_none="1"
+					stripext="0"   exclude=".*\.(php|html|xml|wsdl)" />
+				<field type="text" name="merchant_url" size="50" label="VMPAYMENT_PAYEER_MERCHANT_URL" default="//payeer.com/merchant/" description="VMPAYMENT_PAYEER_MERCHANT_URL_DESC" />
+				<field type="text" name="merchant_id" size="50" label="VMPAYMENT_PAYEER_MERCHANT_ID" default="" description="VMPAYMENT_PAYEER_MERCHANT_ID_DESC" />
+				<field type="text" name="secret_key" size="50" label="VMPAYMENT_PAYEER_SECRET_KEY" default="" description="VMPAYMENT_PAYEER_SECRET_KEY_DESC" />
+				<field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="VMPAYMENT_PAYEER_STATUS_PENDING" description="VMPAYMENT_PAYEER_STATUS_PENDING_DESC" />
+				<field name="status_success" type="vmorderstate" scope="com_virtuemart" default="C" label="VMPAYMENT_PAYEER_STATUS_SUCCESS" description="VMPAYMENT_PAYEER_STATUS_SUCCESS_DESC" />
+				<field name="status_canceled" type="vmorderstate" scope="com_virtuemart" default="X" label="VMPAYMENT_PAYEER_STATUS_FAILED" description="VMPAYMENT_PAYEER_STATUS_FAILED_DESC" />
+				<field name="countries" type="vmcountries"  scope="com_virtuemart" default="" label="VMPAYMENT_STANDARD_COUNTRIES" description="VMPAYMENT_STANDARD_COUNTRIES_DESC"/>
+				<field name="payment_currency" type="vmacceptedcurrency" default="" label="VMPAYMENT_STANDARD_CURRENCY" description="VMPAYMENT_STANDARD_CURRENCY_DESC" />
+				<field name="order_desc" type="text" size="50" default="" label="VMPAYMENT_PAYEER_ORDER_DESCRIPTION" description="VMPAYMENT_PAYEER_ORDER_DESCRIPTION_DESC" />
+				<field name="ip_filter" type="text" size="50" default="" label="VMPAYMENT_PAYEER_IP_FILTER" description="VMPAYMENT_PAYEER_IP_FILTER_DESC" />
+				<field name="admin_email" type="text" size="50" default="" label="VMPAYMENT_PAYEER_ADMIN_EMAIL" description="VMPAYMENT_PAYEER_IP_ADMIN_EMAIL_DESC" />
+				<field name="log_file" type="text" size="50" default="" label="VMPAYMENT_PAYEER_LOGFILE" description="VMPAYMENT_PAYEER_LOGFILE_DESC" />
+			</fieldset>
+        </fields>
+    </vmconfig>
+</install>
