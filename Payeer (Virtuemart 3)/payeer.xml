@@ -25,7 +25,7 @@
 					directory="/plugins/vmpayment/payeer"
 					default="payeer.png" hide_default="1" hide_none="1"
 					stripext="0"   exclude=".*\.(php|html|xml|wsdl)" />
-				<field type="text" name="merchant_url" size="50" label="VMPAYMENT_PAYEER_MERCHANT_URL" default="//payeer.com/merchant/" description="VMPAYMENT_PAYEER_MERCHANT_URL_DESC" />
+				<field type="text" name="merchant_url" size="50" label="VMPAYMENT_PAYEER_MERCHANT_URL" default="https://payeer.com/merchant/" description="VMPAYMENT_PAYEER_MERCHANT_URL_DESC" />
 				<field type="text" name="merchant_id" size="50" label="VMPAYMENT_PAYEER_MERCHANT_ID" default="" description="VMPAYMENT_PAYEER_MERCHANT_ID_DESC" />
 				<field type="text" name="secret_key" size="50" label="VMPAYMENT_PAYEER_SECRET_KEY" default="" description="VMPAYMENT_PAYEER_SECRET_KEY_DESC" />
 				<field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="VMPAYMENT_PAYEER_STATUS_PENDING" description="VMPAYMENT_PAYEER_STATUS_PENDING_DESC" />

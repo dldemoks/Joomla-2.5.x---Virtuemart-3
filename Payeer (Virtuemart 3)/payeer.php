@@ -61,28 +61,30 @@ class plgVmpaymentPayeer extends vmPSPlugin
 			require(VMPATH_ADMIN . DS . 'models' . DS . 'orders.php');
 		}
 
-		$mb_data = vRequest::getPost();
+		$payeer_data = vRequest::getPost();
 		
-		if (isset($mb_data['m_operation_id']) && isset($mb_data['m_sign']))
+		if (isset($payeer_data['m_operation_id']) && isset($payeer_data['m_sign']))
 		{
 			$err = false;
 			$message = '';
+			$payment = $this->getDataByOrderId($payeer_data['m_orderid']);
+			$method = $this->getVmPluginMethod($payment->virtuemart_paymentmethod_id);
 			
 			// запись логов
 			
 			$log_text = 
 				"--------------------------------------------------------\n" .
-				"operation id		" . $mb_data["m_operation_id"] . "\n" .
-				"operation ps		" . $mb_data["m_operation_ps"] . "\n" .
-				"operation date		" . $mb_data["m_operation_date"] . "\n" .
-				"operation pay date	" . $mb_data["m_operation_pay_date"] . "\n" .
-				"shop				" . $mb_data["m_shop"] . "\n" .
-				"order id			" . $mb_data["m_orderid"] . "\n" .
-				"amount				" . $mb_data["m_amount"] . "\n" .
-				"currency			" . $mb_data["m_curr"] . "\n" .
-				"description		" . base64_decode($mb_data["m_desc"]) . "\n" .
-				"status				" . $mb_data["m_status"] . "\n" .
-				"sign				" . $mb_data["m_sign"] . "\n\n";
+				"operation id		" . $payeer_data["m_operation_id"] . "\n" .
+				"operation ps		" . $payeer_data["m_operation_ps"] . "\n" .
+				"operation date		" . $payeer_data["m_operation_date"] . "\n" .
+				"operation pay date	" . $payeer_data["m_operation_pay_date"] . "\n" .
+				"shop				" . $payeer_data["m_shop"] . "\n" .
+				"order id			" . $payeer_data["m_orderid"] . "\n" .
+				"amount				" . $payeer_data["m_amount"] . "\n" .
+				"currency			" . $payeer_data["m_curr"] . "\n" .
+				"description		" . base64_decode($payeer_data["m_desc"]) . "\n" .
+				"status				" . $payeer_data["m_status"] . "\n" .
+				"sign				" . $payeer_data["m_sign"] . "\n\n";
 			
 			$log_file = $method->log_file;
 			
@@ -93,21 +95,18 @@ class plgVmpaymentPayeer extends vmPSPlugin
 			
 			// проверка цифровой подписи и ip
 
-			$payment = $this->getDataByOrderId($mb_data['m_orderid']);
-			$method = $this->getVmPluginMethod($payment->virtuemart_paymentmethod_id);
-			$m_key = $method->secret_key;
 			$sign_hash = strtoupper(hash('sha256', implode(":", array(
-				$mb_data['m_operation_id'],
-				$mb_data['m_operation_ps'],
-				$mb_data['m_operation_date'],
-				$mb_data['m_operation_pay_date'],
-				$mb_data['m_shop'],
-				$mb_data['m_orderid'],
-				$mb_data['m_amount'],
-				$mb_data['m_curr'],
-				$mb_data['m_desc'],
-				$mb_data['m_status'],
-				$m_key
+				$payeer_data['m_operation_id'],
+				$payeer_data['m_operation_ps'],
+				$payeer_data['m_operation_date'],
+				$payeer_data['m_operation_pay_date'],
+				$payeer_data['m_shop'],
+				$payeer_data['m_orderid'],
+				$payeer_data['m_amount'],
+				$payeer_data['m_curr'],
+				$payeer_data['m_desc'],
+				$payeer_data['m_status'],
+				$method->secret_key
 			))));
 			
 			$valid_ip = true;
@@ -133,7 +132,7 @@ class plgVmpaymentPayeer extends vmPSPlugin
 				$err = true;
 			}
 
-			if ($mb_data["m_sign"] != $sign_hash)
+			if ($payeer_data["m_sign"] != $sign_hash)
 			{
 				$message .= " - do not match the digital signature\n";
 				$err = true;
@@ -147,7 +146,7 @@ class plgVmpaymentPayeer extends vmPSPlugin
 				$virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber($order_number);
 				$order['virtuemart_order_id'] = $payment->virtuemart_order_id;
 				$order['virtuemart_user_id'] = $payment->virtuemart_user_id;
-				$order['order_total'] = $mb_data['m_amount'];
+				$order['order_total'] = $payeer_data['m_amount'];
 				$order['customer_notified'] = 0;
 				$order['virtuemart_vendor_id'] = 1;
 				$order['comments'] = vmText::sprintf('VMPAYMENT_PAYEER_PAYMENT_CONFIRMED', $order_number);
@@ -157,13 +156,13 @@ class plgVmpaymentPayeer extends vmPSPlugin
 				
 				// проверка суммы и валюты
 			
-				if ($mb_data['m_amount'] != $order_amount)
+				if ($payeer_data['m_amount'] != $order_amount)
 				{
 					$message .= " - Wrong amount\n";
 					$err = true;
 				}
 
-				if ($mb_data['m_curr'] != $order_curr)
+				if ($payeer_data['m_curr'] != $order_curr)
 				{
 					$message .= " - Wrong currency\n";
 					$err = true;
@@ -173,7 +172,7 @@ class plgVmpaymentPayeer extends vmPSPlugin
 				
 				if (!$err)
 				{
-					switch ($mb_data['m_status'])
+					switch ($payeer_data['m_status'])
 					{
 						case 'success':
 							$order['order_status'] = $method->status_success;
@@ -202,11 +201,11 @@ class plgVmpaymentPayeer extends vmPSPlugin
 					mail($to, "Error payment", $message, $headers);
 				}
 				
-				echo $mb_data['m_orderid'] . '|error';
+				echo $payeer_data['m_orderid'] . '|error';
 			}
 			else
 			{
-				echo $mb_data['m_orderid'] . '|success';
+				echo $payeer_data['m_orderid'] . '|success';
 			}
 		}
 		
@@ -226,7 +225,7 @@ class plgVmpaymentPayeer extends vmPSPlugin
 		}
 
 		VmConfig::loadJLang('com_virtuemart_orders', TRUE);
-		$mb_data = vRequest::getPost();
+		$payeer_data = vRequest::getPost();
 
 
 		// the payment itself should send the parameter needed.
@@ -252,7 +251,7 @@ class plgVmpaymentPayeer extends vmPSPlugin
 		$orderModel = VmModel::getModel('orders');
 		$order = $orderModel->getOrder($virtuemart_order_id);
 
-		vmdebug ('Payeer plgVmOnPaymentResponseReceived', $mb_data);
+		vmdebug ('Payeer plgVmOnPaymentResponseReceived', $payeer_data);
 		$payment_name = $this->renderPluginName ($method);
 		$html = $this->_getPaymentResponseHtml ($paymentTable, $payment_name);
 		$link=	JRoute::_("index.php?option=com_virtuemart&view=orders&layout=details&order_number=".$order['details']['BT']->order_number."&order_pass=".$order['details']['BT']->order_pass, false) ;
