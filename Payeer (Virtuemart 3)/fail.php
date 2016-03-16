@@ -3,6 +3,4 @@
 	<input type="hidden" name="view" value="pluginresponse">
 	<input type="hidden" name="task" value="pluginUserPaymentCancel">
 </form>
-<script>
-document.forms.fname.submit();
-</script>
+<script>document.forms.fname.submit();</script>

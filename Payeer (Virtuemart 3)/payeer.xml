@@ -31,9 +31,8 @@
 				<field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="VMPAYMENT_PAYEER_STATUS_PENDING" description="VMPAYMENT_PAYEER_STATUS_PENDING_DESC" />
 				<field name="status_success" type="vmorderstate" scope="com_virtuemart" default="C" label="VMPAYMENT_PAYEER_STATUS_SUCCESS" description="VMPAYMENT_PAYEER_STATUS_SUCCESS_DESC" />
 				<field name="status_canceled" type="vmorderstate" scope="com_virtuemart" default="X" label="VMPAYMENT_PAYEER_STATUS_FAILED" description="VMPAYMENT_PAYEER_STATUS_FAILED_DESC" />
-				<field name="countries" type="vmcountries"  scope="com_virtuemart" default="" label="VMPAYMENT_STANDARD_COUNTRIES" description="VMPAYMENT_STANDARD_COUNTRIES_DESC"/>
+				<field name="countries" type="vmcountries" scope="com_virtuemart" default="" label="VMPAYMENT_STANDARD_COUNTRIES" description="VMPAYMENT_STANDARD_COUNTRIES_DESC"/>
 				<field name="payment_currency" type="vmacceptedcurrency" default="" label="VMPAYMENT_STANDARD_CURRENCY" description="VMPAYMENT_STANDARD_CURRENCY_DESC" />
-				<field name="order_desc" type="text" size="50" default="" label="VMPAYMENT_PAYEER_ORDER_DESCRIPTION" description="VMPAYMENT_PAYEER_ORDER_DESCRIPTION_DESC" />
 				<field name="ip_filter" type="text" size="50" default="" label="VMPAYMENT_PAYEER_IP_FILTER" description="VMPAYMENT_PAYEER_IP_FILTER_DESC" />
 				<field name="admin_email" type="text" size="50" default="" label="VMPAYMENT_PAYEER_ADMIN_EMAIL" description="VMPAYMENT_PAYEER_IP_ADMIN_EMAIL_DESC" />
 				<field name="log_file" type="text" size="50" default="" label="VMPAYMENT_PAYEER_LOGFILE" description="VMPAYMENT_PAYEER_LOGFILE_DESC" />
