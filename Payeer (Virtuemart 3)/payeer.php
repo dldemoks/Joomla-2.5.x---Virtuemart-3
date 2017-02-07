@@ -168,6 +168,18 @@ class plgVmpaymentPayeer extends vmPSPlugin
 					$err = true;
 				}
 				
+				$db = JFactory::getDBO();
+				$q = "SELECT order_status FROM #__virtuemart_orders WHERE `virtuemart_order_id`='" . $virtuemart_order_id . "'";
+				$db->setQuery($q);
+				$db->query();
+				$order_status = $db->loadResult();
+
+				if (!$order_status)
+				{
+					$message .= " order does not exist\n";
+					$err = true;
+				}
+				
 				// проверка статуса
 				
 				if (!$err)
@@ -175,14 +187,24 @@ class plgVmpaymentPayeer extends vmPSPlugin
 					switch ($payeer_data['m_status'])
 					{
 						case 'success':
-							$order['order_status'] = $method->status_success;
-							$modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
+						
+							if ($order_status != $method->status_success)
+							{
+								$order['order_status'] = $method->status_success;
+								$modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
+							}
+							
 							break;
 							
 						default:
+						
+							if ($order_status != $method->status_canceled)
+							{
+								$order['order_status'] = $method->status_canceled;
+								$modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
+							}
+
 							$message .= " The payment status is not success\n";
-							$order['order_status'] = $method->status_canceled;
-							$modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
 							$err = true;
 							break;
 					}
